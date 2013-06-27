@@ -10,13 +10,28 @@ except ImportError:
     from celery.decorators import task
 
 @task
-def metric_task(**kwargs):
-    if 'who' in kwargs:
-        #assume it's an e-mail
-        try:
-            user = User.objects.get(email=kwargs['who'])
-        except User.DoesNotExist:
+def add_metric( who=None,
+                when=None,
+                what=None,
+                category=None,
+                action=None,
+                label=None
+               ):
+        if who:
+            #assume it's an e-mail
+            try:
+                user = User.objects.get(email=who)
+            except User.DoesNotExist:
+                user = None
+        else:
             user = None
-        kwargs.update(who=user)
-    logger.debug("prepared to record a metric %s " % kwargs)
-    Event.objects.create(kwargs)
+        obj = Event(
+            who = user,
+            when = when,
+            what = what,
+            category = category,
+            action = action,
+            label = label,
+        )
+        #logger.debug("prepared to record a metric %s " % what)
+        obj.save()
