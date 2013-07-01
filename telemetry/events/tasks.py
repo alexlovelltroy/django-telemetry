@@ -28,10 +28,10 @@ def add_metric( who=None,
         obj = Event(
             who = user,
             when = when,
-            what = what,
-            category = category,
-            action = action,
-            label = label,
+            what = unicode(what),
+            category = unicode(category),
+            action = unicode(action),
+            label = unicode(label),
         )
         #logger.debug("prepared to record a metric %s " % what)
         obj.save()
