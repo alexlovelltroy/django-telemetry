@@ -14,7 +14,9 @@ class UserAgentAdmin(admin.ModelAdmin):
     list_display = ('http_user_agent', 'first_seen', 'is_spider')
 
 class RequestAdmin(admin.ModelAdmin):
-    list_display = ('server_name', 'path', 'remote_addr', 'user')
+    list_filter = ('path', 'user')
+    search_fields = ('path', 'user')
+    list_display = ('server_name', 'path', 'remote_addr', 'user', 'http_user_agent', 'http_referer')
 
 admin.site.register(Request, RequestAdmin)
 admin.site.register(UserAgent, UserAgentAdmin)

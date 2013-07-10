@@ -2,7 +2,7 @@ from logging import getLogger
 logger = getLogger('telemetry_requests')
 import datetime
 from django.utils.timezone import utc
-from django.db import models
+from django.db import models, transaction
 from django.conf import settings
 
 # Create your models here.
@@ -68,6 +68,8 @@ def add_request(request):
     )
 
 
+
+@transaction.commit_on_success
 def tx_add_request(path=None,
                    user=None,
                    http_user_agent=None,
@@ -113,7 +115,6 @@ def tx_add_request(path=None,
         ))
     request_obj =  Request(**create_dict)
     request_obj.save()
-    return request_obj
 
 
 def log_request(request):
