@@ -1,5 +1,7 @@
-# django-telemetry
-## Record and Store all your own data
+django-telemetry
+================
+
+An event-based reporting system for django -- With queryset graphs!
 
 There are many external analytics packages that can tell you about your users in aggregate.  We like [Google Analytics](http://google.com/analytics) for that.  To store information about requests along with the users who made them, we like django-telemetry.
 
