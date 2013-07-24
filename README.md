@@ -1,6 +1,6 @@
 django-telemetry
 ================
-An event-based reporting system for django -- With queryset graphs!
+An event-based reporting system for django -- With queryset graphs [More on the graphs in this gist](https://gist.github.com/alexlovelltroy/5993250)!
 
 ### Not fit for human consumption.  
 This is a collection of event/reporting code that I've used in various places over the years.  It seems useful enough to share, but I haven't added docs or examples yet.
