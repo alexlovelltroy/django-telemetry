@@ -1,16 +1,18 @@
 django-telemetry
 ================
-
 An event-based reporting system for django -- With queryset graphs!
 
-There are many external analytics packages that can tell you about your users in aggregate.  We like [Google Analytics](http://google.com/analytics) for that.  To store information about requests along with the users who made them, we like django-telemetry.
+### Not fit for human consumption.  
+This is a collection of event/reporting code that I've used in various places over the years.  It seems useful enough to share, but I haven't added docs or examples yet.
 
-### Async operation with celery
 
-If you are running a celery task queue, recording of the views in the database can be separated from the actual request.
+## Event Features
+* Event reporting in middleware, decorators, and tasks
+* Request recording using middleware, decorators, view Mixins.
+* Organizing requests by user, referer, and browser signature where provided
+* Optional async recording/reporting using celery
 
-### Middleware vs Decorator vs Mixin
+## Reporting Features
+* Logs in the database with management commands to clear old logs
+* Generic queryset graphs (using [flot](http://flotcharts.org) to track _any_ queryset with a date field
 
-Depending on your performance needs, telemetry can be recorded at different points in the request/response cycle.  Middleware plays nicely with most kinds of caching and is easiest to set up.  You probably want that.
-
-If you really want to exert more control, the Mixin and Decorator are provided
