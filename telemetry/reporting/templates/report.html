@@ -1,0 +1,46 @@
+{% extend "telemetry/base.html" %}
+{% load static from staticfiles %}
+{% block content %}
+<h1>Here's your graph</h1>
+<div class="graph-container">
+    <div id="detailGraph" class="demo-placeholder"></div>
+</div>
+<div class="graph-container">
+    <div id="userGraph" class="demo-placeholder"></div>
+</div>
+<script src="{% static "javascripts/jquery.min.js" %}"></script>
+<script src="{% static "javascripts/jquery.flot.min.js" %}"></script>
+<script src="{% static "javascripts/jquery.flot.time.min.js" %}"></script>
+<script src="{% static "javascripts/jquery.flot.selection.min.js" %}"></script>
+<script src="{% static "javascripts/jquery.flot.tooltip.min.js" %}"></script>
+<script src="{% static "javascripts/django-telemetry.js" %}"></script>
+<script>
+{% autoescape off %}
+
+TOTALS = {{ totals_json }}
+
+
+$(document).ready(function() {
+    user_totals = Array()
+    user_by_day = Array()
+    rolling_user = Array()
+    _.each(TOTALS.Users, function(item,index,list) {user_totals.push([item[0] * 1000,sum(list,index)])});
+    _.each(TOTALS.Users, function(item,index,list) {user_by_day.push([item[0] * 1000,item[1]])});
+    _.each(TOTALS.rolling_Users, function(item,index,list) {rolling_user.push([item[0] * 1000,item[1]])});
+    total_users = user_totals[user_totals.length -1][1]
+
+    var options = { xaxis: { mode: "time", tickLength: 5 }, legend: {position: 'nw',}, grid: { hoverable: true}, tooltip: true, tooltipOpts: { content: "%y %s on %x", xDateFormat: "%b %e", }, series: { lines: { show: true },  }, selection: { mode: "x" }, zoomtarget:"#detailGraph" };
+    window.graphs = {
+        userPlot: new Graph("#userGraph",
+           [{data: user_by_day, label:"New Users"}, {data: rolling_user, label:"New Users (weekly rolling average)"}],
+           options),
+    }
+
+    for (var index in window.graphs) {
+        window.graphs[index].plot()
+    };
+
+});
+{% endautoescape %}
+</script>
+{% endblock %}
