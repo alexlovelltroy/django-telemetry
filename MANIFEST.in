@@ -1,8 +1,4 @@
 include *.md
 include *.rst
 include *.txt
-include telemetry/reporting/static/app.css
-include telemetry/reporting/static/javascripts/*
-include telemetry/reporting/templates/*
-
-
+recursive-include telemetry *
