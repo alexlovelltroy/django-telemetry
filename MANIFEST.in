@@ -1,4 +1,8 @@
+global-exclude *.pyc
+
 include *.md
-include *.rst
 include *.txt
+
 recursive-include telemetry *
+recursive-include telemetry/reporting/templates *
+recursive-include telemetry/reporting/static *
