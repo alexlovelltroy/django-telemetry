@@ -3,6 +3,6 @@ global-exclude *.pyc
 include *.md
 include *.txt
 
-recursive-include telemetry *
-recursive-include telemetry/reporting/templates *
-recursive-include telemetry/reporting/static *
+recursive-include telemetry/reporting *.html
+recursive-include telemetry/reporting *.js
+recursive-include telemetry/reporting *.css
