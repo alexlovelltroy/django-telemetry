@@ -1,5 +1,4 @@
 import datetime
-import pytz
 # This assumes that you've only got utc times in your database.  Please don't put anything but utc in your database.  I'll cry.
 
 def list_frequency(mylist):
@@ -22,9 +21,15 @@ def build_datestack(obj, date_field, qs=None):
         obj_list = qs.order_by(date_field)
     else:
         obj_list = obj.objects.all().order_by(date_field)
-    first_date = getattr(obj_list[0], date_field).date()
-    last_date = getattr(obj_list[len(obj_list) -1], date_field).date()
-    date_list = sorted(list_frequency([getattr(x,date_field).date() for x in obj_list]), key=lambda y: y[0], reverse=True)
+    first_date = getattr(obj_list[0], date_field)
+    last_date = getattr(obj_list[len(obj_list) -1], date_field)
+    try:
+        first_date = first_date.date()
+        first_date = last_date.date()
+        date_list = sorted(list_frequency([getattr(x,date_field).date() for x in obj_list]), key=lambda y: y[0], reverse=True)
+    except AttributeError:
+        date_list = sorted(list_frequency([getattr(x,date_field) for x in obj_list]), key=lambda y: y[0], reverse=True)
+        pass
     out = []
     builder_date = first_date
     data_date = date_list.pop()
@@ -71,7 +76,7 @@ def build_report(report_list, average=None):
         context['report_as_json'] = json.dumps(report, default=dthandler)
     """
 
-    now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+    now = datetime.date.today()
     report = {}
     for each in report_list:
         obj = each.get('obj', None)
@@ -94,8 +99,13 @@ def build_report(report_list, average=None):
                     pass
 
         report["%s_all_time" % label] = len(qs)
-        report["%s_last_30" % label] = len([x for x in qs if getattr(x, date_field) > now - datetime.timedelta(days=30)])
-        report["%s_last_60" % label] = len([x for x in qs if getattr(x, date_field) > now - datetime.timedelta(days=60)])
-        report["%s_last_90" % label] = len([x for x in qs if getattr(x, date_field) > now - datetime.timedelta(days=90)])
+        try:
+            report["%s_last_30" % label] = len([x for x in qs if getattr(x, date_field) > now - datetime.timedelta(days=30)])
+            report["%s_last_60" % label] = len([x for x in qs if getattr(x, date_field) > now - datetime.timedelta(days=60)])
+            report["%s_last_90" % label] = len([x for x in qs if getattr(x, date_field) > now - datetime.timedelta(days=90)])
+        except TypeError: # These are datetimes
+            report["%s_last_30" % label] = len([x for x in qs if getattr(x, date_field).date() > now - datetime.timedelta(days=30)])
+            report["%s_last_60" % label] = len([x for x in qs if getattr(x, date_field).date() > now - datetime.timedelta(days=60)])
+            report["%s_last_90" % label] = len([x for x in qs if getattr(x, date_field).date() > now - datetime.timedelta(days=90)])
     return report
 
