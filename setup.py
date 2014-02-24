@@ -24,7 +24,7 @@ print data_files
 
 setup(
     name='django-telemetry',
-    version='0.1.0',
+    version='0.1.1',
     author='Alex Lovell-Troy',
     author_email='alex@lovelltroy.org',
     description='Event-based reporting system for django - with queryset graphs',
