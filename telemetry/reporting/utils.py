@@ -23,13 +23,14 @@ def build_datestack(obj, date_field, qs=None):
         obj_list = obj.objects.all().order_by(date_field)
     first_date = getattr(obj_list[0], date_field)
     last_date = getattr(obj_list[len(obj_list) -1], date_field)
-    try:
+    if isinstance(first_date, datetime.datetime):
         first_date = first_date.date()
-        first_date = last_date.date()
+        last_date = last_date.date()
         date_list = sorted(list_frequency([getattr(x,date_field).date() for x in obj_list]), key=lambda y: y[0], reverse=True)
-    except AttributeError:
+    elif isinstance(first_date, datetime.date):
         date_list = sorted(list_frequency([getattr(x,date_field) for x in obj_list]), key=lambda y: y[0], reverse=True)
-        pass
+    else:
+        raise ValueError("DateField no valid. Expected datetime.date or datetime.datetime and got: %s" % first_date)
     out = []
     builder_date = first_date
     data_date = date_list.pop()

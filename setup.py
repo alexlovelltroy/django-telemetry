@@ -47,7 +47,7 @@ setup(
     long_description=open('README.md').read(),
     install_requires=[
         "Django >= 1.5",
-        "pytz >= 2013.9",
+        "pytz",
         "django-celery >= 3.1",
         "South >= 0.8",
     ],
